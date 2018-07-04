@@ -1572,6 +1572,11 @@
             <add-to-group group-id="EditorTabPopupMenu" anchor="last"/>
             <keyboard-shortcut first-keystroke="control shift G" keymap="$default"/>
         </action>
+        <action id="Scala.ConvertScalaToKotlin" class="org.jetbrains.plugins.kotlinConverter.ConvertScalaToKotlinAction"
+                text="Convert Scala to Kotlin" description="Convert Scala to Kotlin">
+          <add-to-group group-id="RefactoringMenu" anchor="last"/>
+          <add-to-group group-id="EditorTabPopupMenu" anchor="last"/>
+        </action>
         <action id="Scala.Desugar" class="org.jetbrains.plugins.scala.lang.transformation.DesugarCodeAction"
                 text="Desugar Scala code..." description="Desugar Scala code (selection / whole file)">
             <add-to-group group-id="CodeMenu" anchor="last"/>
