@@ -10,8 +10,8 @@ class GenAstTest extends ScalaLightPlatformCodeInsightTestCaseAdapter {
   def doTest(code: String, expectedAst: AST) = {
     configureFromFileTextAdapter("dummy.scala", code)
     val psiFile = getFileAdapter
-    println(ASTConverter.gen(psiFile))
-    assert(expectedAst == ASTConverter.gen(psiFile))
+    println(ASTGenerator.gen(psiFile))
+    assert(expectedAst == ASTGenerator.gen(psiFile))
   }
 
   def doExprTest(expr: String, expectedExpr: Expr) = {

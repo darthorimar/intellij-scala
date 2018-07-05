@@ -17,12 +17,19 @@ class ConvertTest extends ScalaLightPlatformCodeInsightTestCaseAdapter {
 
  def test = {
    doTest(
-     """
-       |class A {
-       |  def foo = {
-       |    Seq.empty.map(identity)
+     """package org.jetbrains.plugins.kotlinConverter
+       |
+       |import org.jetbrains.plugins.kotlinConverter.ast.Stmt.FileDef
+       |import org.jetbrains.plugins.scala.lang.psi.api.ScalaFile
+       |
+       |object Converter {
+       |  def convert(file: ScalaFile): String = {
+       |    val builder = new KotlinBuilder
+       |    builder.gen(ASTGenerator.gen[FileDef](file))
+       |    builder.text
        |  }
        |}
+       |
      """.stripMargin)
  }
 }
