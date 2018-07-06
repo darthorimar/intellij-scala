@@ -22,14 +22,10 @@ class ConvertTest extends ScalaLightPlatformCodeInsightTestCaseAdapter {
        |import org.jetbrains.plugins.kotlinConverter.ast.Stmt.FileDef
        |import org.jetbrains.plugins.scala.lang.psi.api.ScalaFile
        |
-       |object Converter {
-       |  def convert(file: ScalaFile): String = {
-       |    a.map{x => x *2 }
-       |  }
-       |}
-       |
+       |case class Converter(x: Int, private var y: String)
      """.stripMargin)
 
  }
+  case class A()
 }
 
