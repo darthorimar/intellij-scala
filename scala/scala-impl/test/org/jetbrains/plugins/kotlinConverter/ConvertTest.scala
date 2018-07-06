@@ -24,7 +24,7 @@ class ConvertTest extends ScalaLightPlatformCodeInsightTestCaseAdapter {
        |
        |object Converter {
        |  def convert(file: ScalaFile): String = {
-       |    a.map(_*2)
+       |    a.map{x => x *2 }
        |  }
        |}
        |
