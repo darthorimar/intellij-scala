@@ -24,13 +24,12 @@ class ConvertTest extends ScalaLightPlatformCodeInsightTestCaseAdapter {
        |
        |object Converter {
        |  def convert(file: ScalaFile): String = {
-       |    val builder = new KotlinBuilder
-       |    builder.gen(ASTGenerator.gen[FileDef](file))
-       |    builder.text
+       |    a.map(_*2)
        |  }
        |}
        |
      """.stripMargin)
+
  }
 }
 
