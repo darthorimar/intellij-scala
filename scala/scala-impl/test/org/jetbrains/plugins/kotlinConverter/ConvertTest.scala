@@ -2,7 +2,7 @@ package org.jetbrains.plugins.kotlinConverter
 
 import org.jetbrains.plugins.kotlinConverter.ast.Expr.Lit
 import org.jetbrains.plugins.kotlinConverter.ast.Stmt.{DefnDef, FileDef, MultiBlock}
-import org.jetbrains.plugins.kotlinConverter.ast.{AST, Expr, Type}
+import org.jetbrains.plugins.kotlinConverter.ast.{AST, Expr, TypeCont}
 import org.jetbrains.plugins.scala.base.ScalaLightPlatformCodeInsightTestCaseAdapter
 import org.jetbrains.plugins.scala.lang.psi.api.ScalaFile
 
@@ -17,11 +17,10 @@ class ConvertTest extends ScalaLightPlatformCodeInsightTestCaseAdapter {
 
  def test = {
    doTest(
-     """package org.jetbrains.plugins.kotlinConverter
-       |
+     """
        |trait KotlinBuilderBase {
-       |  def rep[T](values: Seq[T], sep: String)(h: T => Unit): Unit =
-       |    rep(values, sep)(h)
+       |  def rep(a: Int, b: Boolean)(c: String, d: Long)(e: Char): Unit =
+       |    rep(a,b)(c,d)(e)
        |}
        |
      """.stripMargin)
