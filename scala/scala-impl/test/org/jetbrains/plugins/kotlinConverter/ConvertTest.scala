@@ -22,7 +22,7 @@ class ConvertTest extends ScalaLightPlatformCodeInsightTestCaseAdapter {
        |import org.jetbrains.plugins.kotlinConverter.ast.Stmt.FileDef
        |import org.jetbrains.plugins.scala.lang.psi.api.ScalaFile
        |
-       |case class Converter(x: Int, private var y: String)
+       |class Converter(x: Int, private var y: String) extends App
      """.stripMargin)
 
  }
