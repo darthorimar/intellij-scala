@@ -19,10 +19,11 @@ class ConvertTest extends ScalaLightPlatformCodeInsightTestCaseAdapter {
    doTest(
      """package org.jetbrains.plugins.kotlinConverter
        |
-       |import org.jetbrains.plugins.kotlinConverter.ast.Stmt.FileDef
-       |import org.jetbrains.plugins.scala.lang.psi.api.ScalaFile
+       |trait KotlinBuilderBase {
+       |  def rep[T](values: Seq[T], sep: String)(h: T => Unit): Unit =
+       |    rep(values, sep)(h)
+       |}
        |
-       |class Converter(x: Int, private var y: String) extends App
      """.stripMargin)
 
  }
