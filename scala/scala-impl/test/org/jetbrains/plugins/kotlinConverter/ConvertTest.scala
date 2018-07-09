@@ -17,12 +17,11 @@ class ConvertTest extends ScalaLightPlatformCodeInsightTestCaseAdapter {
    doTest(
      """
        |class A {
-       |  def foo(x: Int, y: Int)(z: String) =
-       |    foo(x,y)(z)
+       |  def foo(x: Option[Int]) = {
+       |    x.get()
+       |  }
        |}
      """.stripMargin)
-
-
  }
   case class A()
 }
