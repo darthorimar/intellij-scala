@@ -19,12 +19,13 @@ class ConvertTest extends ScalaLightPlatformCodeInsightTestCaseAdapter {
    doTest(
      """
        |trait KotlinBuilderBase {
-       |  def a(x: Int)(y: Int) =  x + Y
-       |  def rep(a: Int, b: Boolean)(c: String, d: Long)(e: Char): Unit =
-       |    rep(a,b)(c,a(1)(2))(e)
+       |  def a = {
+       |     Some(1).map{ x=> x+ 1}.get + 1
+       |  }
        |}
        |
      """.stripMargin)
+
 
  }
   case class A()
