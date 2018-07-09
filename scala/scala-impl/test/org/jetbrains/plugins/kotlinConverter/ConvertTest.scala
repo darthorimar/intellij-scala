@@ -16,13 +16,16 @@ class ConvertTest extends ScalaLightPlatformCodeInsightTestCaseAdapter {
  def test = {
    doTest(
      """
-       |class A {
-       |  def foo(x: Option[Int]) = {
-       |    x.get()
-       |  }
+       |trait Expr {
+       |  def ty(): Int
        |}
-     """.stripMargin)
+       |
+       |
+       |case class SingleBlock(stmt: Expr) {
+       |  def a: Type = stmt.ty
+       |}
+       |
+       |""".stripMargin)
  }
-  case class A()
 }
 
