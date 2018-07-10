@@ -21,7 +21,7 @@ class ConvertTest extends ScalaLightPlatformCodeInsightTestCaseAdapter {
 
   def testOptionConverters() = {
     doTest("def a = Some(1).map(x => x + 1).get",
-      "fun a(): Int =1?.let({ x -> x + 1})!!")
+      "fun a(): Int =1?.let { x -> x + 1}!!")
   }
 
 }
