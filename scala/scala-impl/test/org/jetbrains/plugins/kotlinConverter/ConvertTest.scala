@@ -6,16 +6,19 @@ import org.jetbrains.plugins.scala.lang.psi.api.ScalaFile
 
 class ConvertTest extends ScalaLightPlatformCodeInsightTestCaseAdapter {
 
-  def doTest(code: String) = {
-    configureFromFileTextAdapter("dummy.scala", code)
+  def doTest(scala: String, kotlin: String): Unit = {
+    configureFromFileTextAdapter("dummy.scala", scala)
     val psiFile = getFileAdapter
-    println(Converter.convert(psiFile.asInstanceOf[ScalaFile]))
-//    assert(expectedAst == ASTConverter.gen(psiFile))
+    val res = Converter.convert(psiFile.asInstanceOf[ScalaFile])
+    println(res)
+    assert(kotlin.replaceAllLiterally(" ", "").replaceAllLiterally("\n", "") ==
+      res.replaceAllLiterally(" ", "").replaceAllLiterally("\n", ""))
   }
 
- def test = {
-   doTest(
-     "def a = Some(1).get".stripMargin)
- }
+  def testFuncCall() = {
+    doTest("def a = Some(1)", "fun a(): Int? = Some(1)")
+    doTest("""def a = "ny".substring(1,2) """, """fun a(): String = "ny".substring(1,2)""")
+  }
+
 }
 
