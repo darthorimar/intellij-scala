@@ -15,7 +15,7 @@ class ConvertTest extends ScalaLightPlatformCodeInsightTestCaseAdapter {
 
  def test = {
    doTest(
-     "def a = Some(1).map(x => x + 1)".stripMargin)
+     "def a = Some(1).get".stripMargin)
  }
 }
 
