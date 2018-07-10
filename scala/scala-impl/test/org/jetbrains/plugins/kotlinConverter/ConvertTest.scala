@@ -15,14 +15,20 @@ class ConvertTest extends ScalaLightPlatformCodeInsightTestCaseAdapter {
       res.replaceAllLiterally(" ", "").replaceAllLiterally("\n", ""))
   }
 
-  def testFuncCall() = {
-    doTest("""def a = "ny".substring(1,2)""", """fun a(): String = "ny".substring(1,2)""")
-  }
+//  def testFuncCall() = {
+//    doTest("""def a = "ny".substring(1,2)""", """fun a(): String = "ny".substring(1,2)""")
+//  }
+//
+//  def testOptionConverters() = {
+//    doTest("def a = Some(1).map(x => x + 1).get",
+//      "fun a(): Int =1?.let { x -> x + 1}!!")
+//  }
 
-  def testOptionConverters() = {
-    doTest("def a = Some(1).map(x => x + 1).get",
-      "fun a(): Int =1?.let { x -> x + 1}!!")
-  }
+
+    def test() = {
+      doTest("def a = Seq.empty[Int]",
+        "fun a(): Int =1?.let { x -> x + 1}!!")
+    }
 
 }
 
