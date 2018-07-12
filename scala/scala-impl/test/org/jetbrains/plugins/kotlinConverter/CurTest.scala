@@ -14,7 +14,12 @@ class CurTest extends ScalaLightPlatformCodeInsightTestCaseAdapter {
 
   def test(): Unit = {
     eval(
-      """def a = Seq(1,2).map { case 1 => 2; case x => x - 1 }
+      """def a = (1 + 1) match {
+        |  case 1 => 2
+        |  case x => x + 1
+        |  case x: Int => 42
+        |  case _ => 4
+        | }
       """.stripMargin)
   }
 

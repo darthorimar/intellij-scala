@@ -15,7 +15,8 @@ class ConvertTest extends ScalaLightPlatformCodeInsightTestCaseAdapter {
   }
 
   def testFuncCall(): Unit = {
-    doTest("""def a = "ny".substring(1,2)""",
+    doTest(
+      """def a = "ny".substring(1,2)""",
       """fun a(): String = "ny".substring(1,2)""")
   }
 
@@ -33,6 +34,33 @@ class ConvertTest extends ScalaLightPlatformCodeInsightTestCaseAdapter {
       """fun a(x: Int, b: String, c: Char): Int =1
         |fun b(): Int =a(1, "2", '3')""".stripMargin)
   }
+  """def a = (1 + 1) match {
+  case 1 => 2
+  case x => x + 1
+  case x: Int => 42
+  case _ => 4
+ }
+      """
+  def testSimplMatch(): Unit = {
+    doTest(
+      """def a = (1 + 1) match {
+         | case 1 => 2
+         | case x => x + 1
+         | case x: Int => 42
+         | case _ => 4
+         | }
+      """.stripMargin,
+      """fun a(): Int ={
+        |  val match$: Int = (1 + 1)
+        |  when(match$) {
+        |    1 -> 2
+        |    true -> match$ + 1
+        |     is Int -> 42
+        |    else -> 4}
+        |
+        |}""".stripMargin)
+  }
+
 
 }
 
