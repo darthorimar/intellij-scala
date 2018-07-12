@@ -26,7 +26,11 @@ class ConvertTest extends ScalaLightPlatformCodeInsightTestCaseAdapter {
 
 
     def test() = {
-      doTest("def a = Seq.empty[Int]",
+      doTest(
+        """
+          |def a[T](x: Seq[T]) = x.isEmpty
+          |def b = a(Seq.empty[Int])
+        """.stripMargin,
         "fun a(): Int =1?.let { x -> x + 1}!!")
     }
 
