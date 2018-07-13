@@ -41,24 +41,63 @@ class ConvertTest extends ScalaLightPlatformCodeInsightTestCaseAdapter {
   case _ => 4
  }
       """
-  def testSimplMatch(): Unit = {
+  def testMatch(): Unit = {
     doTest(
-      """def a = (1 + 1) match {
-         | case 1 => 2
-         | case x => x + 1
-         | case x: Int => 42
-         | case _ => 4
-         | }
-      """.stripMargin,
-      """fun a(): Int ={
-        |  val match$: Int = (1 + 1)
-        |  when(match$) {
-        |    1 -> 2
-        |    true -> match$ + 1
-        |     is Int -> 42
-        |    else -> 4}
+      """
+        |trait A
+        |case class B(a: A, b: A) extends A
+        |case class C(c: Int) extends A
         |
-        |}""".stripMargin)
+        |def a(x: Any) = x match {
+        |  case B(a, B(C(e: Int), C(d))) if e > 3 => e
+        |  case B(a, b) => 42
+        |  case q: Int if q == 2 => q
+        |  case 2 if 1 == 1 => q
+        |  case _ if 1 == 1 => q
+        | }
+      """.stripMargin,
+      """fun a(x: Any): Any ={
+        |  val match: Any = x
+        |  data class `B(a, B(C(e: Int), C(d)))_data`(public val a: Any, public val e: Int, public val d: Any)
+        |  data class `B(a, b)_data`(public val a: Any, public val b: Any)
+        |  val `B(a, B(C(e: Int), C(d)))` by lazy {
+        |    if (match is B){
+        |      val (a, l1) = match
+        |      if (l1 is B){
+        |        val (l2, l3) = l1
+        |        if (l2 is C && l3 is C){
+        |          val e = l2
+        |          val d = l3
+        |          if (e is Int)if (e > 3)return@lazy `B(a, B(C(e: Int), C(d)))_data`(a, e, d)
+        |        }
+        |      }
+        |    }
+        |    return@lazy null
+        |  }
+        |  val `B(a, b)` by lazy {
+        |    if (match is B){
+        |      val (a, b) = match
+        |      return@lazy `B(a, b)_data`(a, b)
+        |    }
+        |    return@lazy null
+        |  }
+        |  when {
+        |    `B(a, B(C(e: Int), C(d)))` != null -> {
+        |      val (a, e, d) = `B(a, B(C(e: Int), C(d)))`
+        |      e
+        |    }
+        |    `B(a, b)` != null -> {
+        |      val (a, b) = `B(a, b)`
+        |      42
+        |    }
+        |    match is Int && match == 2 -> match
+        |    match == 2 && 1 == 1 -> q
+        |    1 == 1 -> q}
+        |
+        |}
+        |public interface A
+        |public data class B(public val a: A, public val b: A) : A
+        |public data class C(public val c: Int) : A """.stripMargin)
   }
 
 

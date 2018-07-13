@@ -13,8 +13,6 @@ class CurTest extends ScalaLightPlatformCodeInsightTestCaseAdapter {
   }
 
   def test(): Unit = {
-    //  case q if 1 == 1 => q + 1
-    //  case y if 1 != 1 => y
     eval(
       """
         |trait A
@@ -22,8 +20,11 @@ class CurTest extends ScalaLightPlatformCodeInsightTestCaseAdapter {
         |case class C(c: Int) extends A
         |
         |def a(x: Any) = x match {
-        |  case B(a, B(C(e), C(d))) => e
-        |  case q: Int  => q
+        |  case B(a, B(C(e: Int), C(d))) if e > 3 => e
+        |  case B(a, b) => 42
+        |  case q: Int if q == 2 => q
+        |  case 2 if 1 == 1 => q
+        |  case _ if 1 == 1 => q
         | }
       """.stripMargin)
   }
