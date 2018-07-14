@@ -19,15 +19,10 @@ class CurTest extends ScalaLightPlatformCodeInsightTestCaseAdapter {
         |case class B(a: A, b: A) extends A
         |case class C(c: Int) extends A
         |
-        |def a(x: Any) = x match {
-        |  case B(a, B(C(e: Int), C(d))) if e > 3 => e
-        |  case B(a, b) => 42
-        |  case q: Int if q == 2 => q
-        |  case 2 if 1 == 1 => q
-        |  case _ if 1 == 1 => q
+        |def foo(x: Any) = {
+        | val B(С(a), b) = B(C(1), C(2))
         | }
       """.stripMargin)
   }
-
 }
 
