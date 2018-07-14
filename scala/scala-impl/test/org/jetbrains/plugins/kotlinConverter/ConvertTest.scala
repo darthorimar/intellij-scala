@@ -41,6 +41,7 @@ class ConvertTest extends ScalaLightPlatformCodeInsightTestCaseAdapter {
   case _ => 4
  }
       """
+
   def testMatch(): Unit = {
     doTest(
       """
@@ -98,6 +99,25 @@ class ConvertTest extends ScalaLightPlatformCodeInsightTestCaseAdapter {
         |public interface A
         |public data class B(public val a: A, public val b: A) : A
         |public data class C(public val c: Int) : A """.stripMargin)
+  }
+
+  def testOverride(): Unit = {
+    doTest(
+      """
+        | class A {
+        |      def a: Int = 5
+        |    }
+        |    class B extends A {
+        |      def a: Int = 42
+        |    }
+      """.stripMargin,
+      """
+        |public open class A() {
+        |  publicfun a(): Int =5
+        |}
+        |public open class B() : A {
+        |  public override fun a(): Int =42
+        |}""")
   }
 
 
