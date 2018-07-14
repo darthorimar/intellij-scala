@@ -14,14 +14,11 @@ class CurTest extends ScalaLightPlatformCodeInsightTestCaseAdapter {
 
   def test(): Unit = {
     eval(
-      """
-        | class A {
-        |      def a: Int = 5
+      """ trait A {
+        |      def foo: Int
         |    }
-        |    class B extends A {
-        |      def a: Int = 42
-        |    }
-      """.stripMargin)
+        |    case class B(foo: Int) extends A""".stripMargin)
+
   }
 }
 
