@@ -101,7 +101,7 @@ class ConvertTest extends ScalaLightPlatformCodeInsightTestCaseAdapter {
         |public data class C(public val c: Int) : A """.stripMargin)
   }
 
-  def testOverride(): Unit = {
+  def testOverride(): Unit =
     doTest(
       """
         | class A {
@@ -118,7 +118,25 @@ class ConvertTest extends ScalaLightPlatformCodeInsightTestCaseAdapter {
         |public open class B() : A {
         |  public override fun a(): Int =42
         |}""")
-  }
+
+  def testImplicitLambda(): Unit =
+    doTest(
+      """
+      | def a = Seq(1,2,3).map {
+      |    case x if x >= 3 => x - 3
+      |  case _ => 0
+      | }
+      """.stripMargin,
+      """public fun a(): List<Int> =listOf(1, 2, 3).map { val match = it
+        |when {
+        |  match >= 3 -> {
+        |    match - 3
+        |  }
+        |  else -> {
+        |    0
+        |  }}
+        | }""")
+
 
 
 }
