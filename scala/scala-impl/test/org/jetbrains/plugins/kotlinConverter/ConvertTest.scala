@@ -137,6 +137,15 @@ class ConvertTest extends ScalaLightPlatformCodeInsightTestCaseAdapter {
         |  }}
         | }""")
 
+def testCasts(): Unit =
+    doTest(
+      """def a = 1.asInstanceOf[Long]
+        |def a = 1.isInstanceOf[Long]
+      """.stripMargin,
+      """public fun a(): Long =(1 as Long)
+        |public fun a(): Long =(1 is Long)
+      """.stripMargin)
+
 
 
 }
