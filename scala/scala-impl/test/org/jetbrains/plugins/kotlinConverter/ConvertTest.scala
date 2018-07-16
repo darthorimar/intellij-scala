@@ -148,6 +148,36 @@ class ConvertTest extends ScalaLightPlatformCodeInsightTestCaseAdapter {
       """def a = 1 :: Nil""".stripMargin,
       """public fun a(): List<Int> =listOf(1) + emptyList()""".stripMargin)
 
+  def testMkString(): Unit =
+    doTest(
+      """def a = Seq.empty.mkString("(", ",", ")" )""".stripMargin,
+      """public fun a(): String =emptyList().joinToString(",", "(", ")")""".stripMargin)
+
+def testSeqTail(): Unit =
+    doTest(
+      """def a = Seq.empty.tail""".stripMargin,
+      """public fun a(): List<Nothing> =emptyList().drop(1)""".stripMargin)
+
+  def testSeqInit(): Unit =
+    doTest(
+      """def a = Seq.empty.init""".stripMargin,
+      """public fun a(): List<Nothing> =emptyList().dropLast(1)""".stripMargin)
+
+def testTryFinally(): Unit =
+    doTest(
+      """def a = try 1 finally 5""".stripMargin,
+      """public fun a(): Int =try {
+        |  1
+        |} finally {
+        |  5
+        |}""".stripMargin)
+
+  def testStringRepeat(): Unit =
+    doTest(
+      """def a = "nya" * 4""".stripMargin,
+      """public fun a(): String ="nya".repeat(4)""".stripMargin)
+
+
 
 
 }
