@@ -3,6 +3,7 @@ package org.jetbrains.plugins.kotlinConverter
 import org.jetbrains.plugins.kotlinConverter.ast._
 import org.jetbrains.plugins.scala.base.ScalaLightPlatformCodeInsightTestCaseAdapter
 import org.jetbrains.plugins.scala.lang.psi.api.ScalaFile
+import org.junit.Assert._
 
 class ConvertTest extends ScalaLightPlatformCodeInsightTestCaseAdapter {
 
@@ -10,29 +11,29 @@ class ConvertTest extends ScalaLightPlatformCodeInsightTestCaseAdapter {
     configureFromFileTextAdapter("dummy.scala", scala)
     val psiFile = getFileAdapter
     val res = Converter.convert(psiFile.asInstanceOf[ScalaFile])
-    assert(kotlin.replaceAllLiterally(" ", "").replaceAllLiterally("\n", "") ==
+    assertEquals(kotlin.replaceAllLiterally(" ", "").replaceAllLiterally("\n", ""),
       res.replaceAllLiterally(" ", "").replaceAllLiterally("\n", ""))
   }
 
   def testFuncCall(): Unit = {
     doTest(
       """def a = "ny".substring(1,2)""",
-      """fun a(): String = "ny".substring(1,2)""")
+      """public fun a(): String = "ny".substring(1,2)""")
   }
 
   def testOptionConverters(): Unit = {
     doTest("def a = Some(1).map(x => x + 1).get",
-      "fun a(): Int =1?.let { x -> x + 1}!!")
+      "public fun a(): Int =1?.let { x -> x + 1}!!")
   }
 
 
   def testUncarry(): Unit = {
     doTest(
       """def a(x: Int, b: String)(c: Char) = 1
-        |def b = a(1,"2")('3')
+        |public def b = a(1,"2")('3')
       """.stripMargin,
       """fun a(x: Int, b: String, c: Char): Int =1
-        |fun b(): Int =a(1, "2", '3')""".stripMargin)
+        |public fun b(): Int =a(1, "2", '3')""".stripMargin)
   }
   def testMatch(): Unit = {
     doTest(
@@ -105,7 +106,7 @@ class ConvertTest extends ScalaLightPlatformCodeInsightTestCaseAdapter {
       """.stripMargin,
       """
         |public open class A() {
-        |  publicfun a(): Int =5
+        |  public fun a(): Int =5
         |}
         |public open class B() : A {
         |  public override fun a(): Int =42
@@ -177,8 +178,14 @@ def testTryFinally(): Unit =
       """def a = "nya" * 4""".stripMargin,
       """public fun a(): String ="nya".repeat(4)""".stripMargin)
 
+  def testClassTypeParams(): Unit =
+    doTest(
+      """class A[T]""".stripMargin,
+      """public open class A<T>()""".stripMargin)
 
-
-
+  def testFunctionTypeParams(): Unit =
+    doTest(
+      """def a[T] = Seq.empty[T]""".stripMargin,
+      """public fun<T> a(): List<T> =emptyList<T>()""".stripMargin)
 }
 
