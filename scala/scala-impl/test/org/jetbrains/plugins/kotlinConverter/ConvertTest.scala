@@ -34,14 +34,6 @@ class ConvertTest extends ScalaLightPlatformCodeInsightTestCaseAdapter {
       """fun a(x: Int, b: String, c: Char): Int =1
         |fun b(): Int =a(1, "2", '3')""".stripMargin)
   }
-  """def a = (1 + 1) match {
-  case 1 => 2
-  case x => x + 1
-  case x: Int => 42
-  case _ => 4
- }
-      """
-
   def testMatch(): Unit = {
     doTest(
       """
@@ -122,10 +114,10 @@ class ConvertTest extends ScalaLightPlatformCodeInsightTestCaseAdapter {
   def testImplicitLambda(): Unit =
     doTest(
       """
-      | def a = Seq(1,2,3).map {
-      |    case x if x >= 3 => x - 3
-      |  case _ => 0
-      | }
+        | def a = Seq(1,2,3).map {
+        |    case x if x >= 3 => x - 3
+        |  case _ => 0
+        | }
       """.stripMargin,
       """public fun a(): List<Int> =listOf(1, 2, 3).map { val match = it
         |when {
@@ -137,7 +129,7 @@ class ConvertTest extends ScalaLightPlatformCodeInsightTestCaseAdapter {
         |  }}
         | }""")
 
-def testCasts(): Unit =
+  def testCasts(): Unit =
     doTest(
       """def a = 1.asInstanceOf[Long]
         |def a = 1.isInstanceOf[Long]
@@ -145,6 +137,16 @@ def testCasts(): Unit =
       """public fun a(): Long =(1 as Long)
         |public fun a(): Long =(1 is Long)
       """.stripMargin)
+
+  def testSeq_empty(): Unit =
+    doTest(
+      """def a = Seq.empty[Int]""".stripMargin,
+      """public fun a(): List<Int> =emmptyList<Int>()""".stripMargin)
+
+  def testListCon(): Unit =
+    doTest(
+      """def a = 1 :: Nil""".stripMargin,
+      """public fun a(): List<Int> =listOf(1) + emptyList()""".stripMargin)
 
 
 
