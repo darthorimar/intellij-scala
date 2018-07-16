@@ -14,7 +14,10 @@ class CurTest extends ScalaLightPlatformCodeInsightTestCaseAdapter {
 
   def test(): Unit = {
     eval(
-      """def a[T] = Seq.empty[T]"""
+      """def a = {
+        |  val b = Seq.empty[Int]
+        |  b(0)
+        |}"""
         .stripMargin)
   }
 
