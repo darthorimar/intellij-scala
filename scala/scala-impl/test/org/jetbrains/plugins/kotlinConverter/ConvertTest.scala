@@ -212,9 +212,7 @@ def testTryFinally(): Unit =
         |  when {
         |    `Some(x)` != null -> {
         |      val x = `Some(x)`
-        |      {
-        |        x + 1
-        |      }
+        |      x + 1
         |    }
         |    true -> {
         |      0
