@@ -14,7 +14,12 @@ class CurTest extends ScalaLightPlatformCodeInsightTestCaseAdapter {
 
   def test(): Unit = {
     eval(
-      """def a  = s"${1} + $a" """.stripMargin)
+      """
+        |def a = Some(1) match {
+        |   case Some(x) => x + 1
+        |   case None => 0
+        |}
+      """.stripMargin)
   }
 
 }

@@ -192,5 +192,34 @@ def testTryFinally(): Unit =
     doTest(
       """def a = s"${1} + $a"""".stripMargin,
       """public fun a(): String ="${1} + $a()"""".stripMargin)
+
+ def testSomeInWhen(): Unit =
+    doTest(
+      """def a = Some(1) match {
+        |   case Some(x) => x + 1
+        |   case None => 0
+        |}"""".stripMargin,
+      """public fun a(): Int {
+        |  val match1 = Some()(1)
+        |  data class `Some(x)_data`(public val x: Any)
+        |  val `Some(x)` by lazy {
+        |    if (match1 != null){
+        |      val x = match1
+        |      return@lazy `Some(x)_data`(x)
+        |    }
+        |    return@lazy null
+        |  }
+        |  when {
+        |    `Some(x)` != null -> {
+        |      val x = `Some(x)`
+        |      {
+        |        x + 1
+        |      }
+        |    }
+        |    true -> {
+        |      0
+        |    }}
+        |
+        |}"""".stripMargin)
 }
 
