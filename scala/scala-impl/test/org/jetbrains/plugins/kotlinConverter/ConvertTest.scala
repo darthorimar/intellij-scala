@@ -187,5 +187,10 @@ def testTryFinally(): Unit =
     doTest(
       """def a[T] = Seq.empty[T]""".stripMargin,
       """public fun<T> a(): List<T> =emptyList<T>()""".stripMargin)
+
+  def testStringInterpolation(): Unit =
+    doTest(
+      """def a = s"${1} + $a"""".stripMargin,
+      """public fun a(): String ="${1} + $a()"""".stripMargin)
 }
 
