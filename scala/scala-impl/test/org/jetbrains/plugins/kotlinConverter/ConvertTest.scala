@@ -75,7 +75,7 @@ class ConvertTest extends ScalaLightPlatformCodeInsightTestCaseAdapter {
         |    }
         |    return@lazy null
         |  }
-        |  when {
+        |  return when {
         |    `B(a, B(C(e: Int), C(d)))` != null -> {
         |      val (a, e, d) = `B(a, B(C(e: Int), C(d)))`
         |      e
@@ -209,7 +209,7 @@ def testTryFinally(): Unit =
         |    }
         |    return@lazy null
         |  }
-        |  when {
+        |  return when {
         |    `Some(x)` != null -> {
         |      val x = `Some(x)`
         |      x + 1
@@ -219,5 +219,17 @@ def testTryFinally(): Unit =
         |    }}
         |
         |}"""".stripMargin)
+
+ def testRefInLitPattern(): Unit =
+    doTest(
+      """public fun a(): Int {
+        |  val match1 = A
+        |  return when {
+        |    match1 == A -> {
+        |      1
+        |    }}        |
+        |}
+        |public object A """".stripMargin,
+      """"""".stripMargin)
 }
 
