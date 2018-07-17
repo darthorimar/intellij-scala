@@ -14,7 +14,7 @@ class CurTest extends ScalaLightPlatformCodeInsightTestCaseAdapter {
 
   def test(): Unit = {
     eval(
-      """def a = Seq(1,2)"""
+      """def a(x: Int)(y: Int): Int = a(x)(y)"""
         .stripMargin)
   }
 
