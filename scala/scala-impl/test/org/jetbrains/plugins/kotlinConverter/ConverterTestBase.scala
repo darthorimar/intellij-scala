@@ -8,13 +8,16 @@ abstract class ConverterTestBase extends ScalaLightPlatformCodeInsightTestCaseAd
   def doTest(scala: String, kotlin: String, doPrint: Boolean = false): Unit = {
     configureFromFileTextAdapter("dummy.scala", scala)
     val psiFile = getFileAdapter
-    val res = Converter.convert(psiFile.asInstanceOf[ScalaFile])
+    val res = Converter.convert(psiFile.asInstanceOf[ScalaFile], doPrint)
     if (doPrint) {
       println(res)
     }
     else {
-      assertEquals(kotlin.replaceAllLiterally(" ", "").replaceAllLiterally("\n", ""),
-        res.replaceAllLiterally(" ", "").replaceAllLiterally("\n", ""))
+      assertEquals(s"$res\n is not equals to\n $kotlin",
+        unformat(kotlin),
+        unformat(res))
     }
   }
+  private def unformat(text: String) =
+    text.replaceAllLiterally(" ", "").replaceAllLiterally("\n", "")
 }

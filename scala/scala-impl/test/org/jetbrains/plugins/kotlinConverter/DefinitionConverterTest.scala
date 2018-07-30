@@ -8,7 +8,8 @@ class DefinitionConverterTest extends ConverterTestBase {
         |trait B
         |class C extends A(1) with B
       """.stripMargin,
-      """public open class A(public val a: Int)
+      """
+        |public open class A(public val a: Int)
         |public interface B
         |public open class C() : A(1), B
       """.stripMargin)
@@ -22,4 +23,15 @@ class DefinitionConverterTest extends ConverterTestBase {
       """public open class A(public val a: Int, public  b: String)
         |public open class C() : A(1, "nya")
       """.stripMargin)
+
+  def testClassModifiers(): Unit =
+    doTest(
+      """
+        |final class A
+        |class B
+        |abstract class C
+      """.stripMargin,
+      """public open class A(public val a: Int, public  b: String)
+        |public open class C() : A(1, "nya")
+      """.stripMargin, true)
 }
