@@ -4,24 +4,24 @@ class DefinitionConverterTest extends ConverterTestBase {
   def testTraitDef(): Unit =
     doTest(
       """
-        |class A(val a: Int)
+        |class A(a: Int)
         |trait B
         |class C extends A(1) with B
       """.stripMargin,
       """
-        |public open class A(public val a: Int)
-        |public interface B
-        |public open class C() : A(1), B
+        |open class A(a: Int)
+        |interface B
+        |open class C() : A(1), B
       """.stripMargin)
 
   def testMultipleConstctorParams(): Unit =
     doTest(
       """
-        |class A(val a: Int, b: String)
+        |class A(a: Int, b: String)
         |class C extends A(1, "nya")
       """.stripMargin,
-      """public open class A(public val a: Int, public  b: String)
-        |public open class C() : A(1, "nya")
+      """open class A(a: Int,  b: String)
+        |open class C() : A(1, "nya")
       """.stripMargin)
 
   def testClassModifiers(): Unit =
@@ -31,7 +31,10 @@ class DefinitionConverterTest extends ConverterTestBase {
         |class B
         |abstract class C
       """.stripMargin,
-      """public open class A(public val a: Int, public  b: String)
-        |public open class C() : A(1, "nya")
-      """.stripMargin, true)
+      """class A()
+        |open class B()
+        |abstract class C()
+      """.stripMargin)
+
+  class A(a: Int)
 }
