@@ -13,11 +13,15 @@ abstract class ConverterTestBase extends ScalaLightPlatformCodeInsightTestCaseAd
       println(res)
     }
     else {
-      assertEquals(s"$res\n is not equals to\n $kotlin",
+      assertEquals(s"\n$res\n is not equals to\n $kotlin",
         unformat(kotlin),
         unformat(res))
     }
   }
+
+  def doExprTest(scala: String, kotlin: String, doPrint: Boolean = false): Unit =
+    doTest(s"def a = {$scala \n 42}", s"fun a(): Int {$kotlin \n return 42}", doPrint)
+
   private def unformat(text: String) =
     text.replaceAllLiterally(" ", "").replaceAllLiterally("\n", "")
 }
