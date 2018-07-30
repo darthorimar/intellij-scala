@@ -1,9 +1,11 @@
 package org.jetbrains.plugins.scala.lang.formatter.tests
 
+import org.jetbrains.plugins.scala.lang.formatting.settings.ScalaCodeStyleSettings
+
 class ScalaFmtSelectionTest extends SelectionTest {
   override def setUp(): Unit = {
     super.setUp()
-    getScalaSettings.USE_SCALAFMT_FORMATTER = true
+    getScalaSettings.FORMATTER = ScalaCodeStyleSettings.SCALAFMT_FORMATTER
   }
 
   def testExprSelection(): Unit = {
@@ -248,6 +250,34 @@ class ScalaFmtSelectionTest extends SelectionTest {
     doTextTest(before, after)
   }
 
+  def testSCL13939(): Unit = {
+    val before =
+      s"""
+         |object Test {
+         |  null match {
+         |    case _ =>
+         |$startMarker      val nameOpt = {
+         |        "foo"
+         |      }
+         |      val sourceCode = new StringBuilder()$endMarker
+         |  }
+         |}
+      """.stripMargin
+    val after =
+      """
+        |object Test {
+        |  null match {
+        |    case _ =>
+        |      val nameOpt = {
+        |        "foo"
+        |      }
+        |      val sourceCode = new StringBuilder()
+        |  }
+        |}
+      """.stripMargin
+    doTextTest(before, after)
+  }
+
   def testNPEStringContent(): Unit = {
     val tripleQuote = "\"\"\""
     val before =
@@ -265,6 +295,107 @@ class ScalaFmtSelectionTest extends SelectionTest {
          |aaa
          |  $tripleQuote
          |}
+       """.stripMargin
+    doTextTest(before, after)
+  }
+
+  def testSCL14113(): Unit = {
+    val before =
+      s"""
+         |object Foo {
+         |  ${startMarker}def toString() = "Foo"}$endMarker
+       """.stripMargin
+    val after =
+      s"""
+         |object Foo {
+         |  def toString() = "Foo"
+         |}
+       """.stripMargin
+    doTextTest(before, after)
+  }
+
+  def testWhitespaceSelection(): Unit = {
+    val before = s"object O {$startMarker   ${endMarker}}"
+    val after = s"object O {}"
+    doTextTest(before, after)
+  }
+
+  def testWhitespaceSelection_1(): Unit = {
+    val before = s"def    foo$startMarker     ${endMarker}=     42"
+    val after = s"def    foo =     42"
+    doTextTest(before, after)
+  }
+
+  def testWhitespaceSelection_2(): Unit = {
+    val before = s"1   +$startMarker   ${endMarker}3   +   4"
+    val after = s"1   + 3   +   4"
+    doTextTest(before, after)
+  }
+
+  def testWhitespaceSelection_3(): Unit = {
+    val before =
+      s"""
+         |class T {
+         |$startMarker        ${endMarker}def   foo  =  42
+         |}
+       """.stripMargin
+    val after =
+      s"""
+         |class T {
+         |  def   foo  =  42
+         |}
+       """.stripMargin
+    doTextTest(before, after)
+  }
+
+  def testObjectPartialSelection(): Unit = {
+    val before =
+      s"""
+         |package foo
+         |${startMarker}object O {
+         |   def foo  =  bar
+         |}
+         |$endMarker
+         |
+       """.stripMargin
+    val after =
+      s"""
+         |package foo
+         |object O {
+         |  def foo = bar
+         |}
+       """.stripMargin
+    doTextTest(before, after)
+  }
+
+  def testWsBetweenPackageAndImport(): Unit = {
+    val before =
+      s"""
+         |package foo$startMarker
+         |  $endMarker  import bar._
+         |class C {}
+       """.stripMargin
+    val after =
+      s"""
+         |package foo
+         |import bar._
+         |class C {}
+       """.stripMargin
+    doTextTest(before, after)
+  }
+
+  def testWsBetweenImportAndClass(): Unit = {
+    val before =
+      s"""
+         |package foo
+         |import bar._$startMarker
+         |     ${endMarker}class C{}
+       """.stripMargin
+    val after =
+      s"""
+         |package foo
+         |import bar._
+         |class C{}
        """.stripMargin
     doTextTest(before, after)
   }

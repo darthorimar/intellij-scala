@@ -171,6 +171,8 @@ package object extensions {
         i += 1
       }
     }
+
+    def intersperse[B >: A](sep: B): Seq[B] = value.iterator.intersperse(sep).toSeq
   }
 
   implicit class IterableExt[CC[X] <: Iterable[X], A](val value: CC[A]) extends AnyVal {
@@ -262,10 +264,18 @@ package object extensions {
   }
 
   implicit class StringsExt(val strings: Seq[String]) extends AnyVal {
-    def commaSeparated(parenthesize: Boolean = false): String = {
-      val (start, end) = if (parenthesize) ("(", ")") else ("", "")
-      strings.mkString(start, ", ", end)
-    }
+    def commaSeparated(model: Model.Val = Model.None): String =
+      strings.mkString(model.start, ", ", model.end)
+  }
+
+  object Model extends Enumeration {
+
+    class Val(val start: String, val end: String) extends super.Val()
+
+    val None = new Val("", "")
+    val Parentheses = new Val("(", ")")
+    val Braces = new Val("{", "}")
+    val SquareBrackets = new Val("[", "]")
   }
 
   implicit class ASTNodeExt(val node: ASTNode) extends AnyVal {
@@ -671,6 +681,18 @@ package object extensions {
     def headOption: Option[A] = {
       if (delegate.hasNext) Some(delegate.next())
       else None
+    }
+
+    def intersperse[B >: A](sep: B): Iterator[B] = new Iterator[B] {
+      private var intersperseNext = false
+
+      override def hasNext: Boolean = intersperseNext || delegate.hasNext
+
+      override def next(): B = {
+        val element = if (intersperseNext) sep else delegate.next()
+        intersperseNext = !intersperseNext && delegate.hasNext
+        element
+      }
     }
   }
 

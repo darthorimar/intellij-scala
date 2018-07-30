@@ -94,15 +94,18 @@ class VersionTest {
 
     assertFalse(Version("1") ~= Version("1.1"))
     assertTrue(Version("1.1") ~= Version("1"))
+
+    assertFalse(Version("1.2") ~= Version("1.0"))
+    assertFalse(Version("1.2.0-RC3") ~= Version("1.0.0"))
   }
 
   @Test
   def equivalenceGroups(): Unit = {
-    assertTrue(Version("1") ~= Version("1-0"))
     assertTrue(Version("1-0") ~= Version("1"))
 
     assertTrue(Version("1-1") ~= Version("1-1"))
 
+    assertFalse(Version("1") ~= Version("1-0"))
     assertFalse(Version("1-1") ~= Version("2-1"))
     assertFalse(Version("2-1") ~= Version("1-1"))
 

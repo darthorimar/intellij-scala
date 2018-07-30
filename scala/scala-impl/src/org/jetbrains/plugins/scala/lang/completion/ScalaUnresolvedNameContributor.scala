@@ -11,7 +11,7 @@ import com.intellij.psi.codeStyle.CodeStyleManager
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.psi.{PsiElement, PsiFile, PsiReference}
 import com.intellij.util.ProcessingContext
-import org.jetbrains.plugins.scala.extensions.{PsiElementExt, StringsExt, childOf}
+import org.jetbrains.plugins.scala.extensions._
 import org.jetbrains.plugins.scala.lang.lexer.ScalaTokenTypes
 import org.jetbrains.plugins.scala.lang.psi.ScalaPsiElement
 import org.jetbrains.plugins.scala.lang.psi.api.base.{ScFieldId, ScReferenceElement}
@@ -23,8 +23,6 @@ import org.jetbrains.plugins.scala.lang.psi.types.ScType
 import org.jetbrains.plugins.scala.lang.psi.types.result._
 import org.jetbrains.plugins.scala.lang.refactoring.namesSuggester.NameSuggester
 import org.jetbrains.plugins.scala.lang.resolve.ResolveTargets._
-
-import scala.collection.mutable
 
 /** Contributor adds unresolved names in current scope to completion list.
   * Unresolved reference name adds to completion list, according to [[ScReferenceElement.getKinds()]]
@@ -174,33 +172,21 @@ sealed abstract class ScalaTextLookupItem(protected val reference: ScReferenceEl
   protected val arguments: String = maybeArguments.fold("")(createParameters)
 
   private[this] def createParameters(arguments: Seq[ScExpression]) = {
-    implicit val nameValidator: mutable.Map[String, Int] = mutable.Map.empty[String, Int].withDefaultValue(-1)
+    import NameSuggester._
+    val suggester = new UniqueNameSuggester()
 
-    def createParameter(expression: ScExpression): Option[(String, ScType)] = expression match {
+    def createParameter: ScExpression => (String, ScType) = {
       case assign@ScAssignStmt(_, Some(assignment)) =>
-        assign.assignName.map(_ -> assignment.`type`().getOrAny)
-      case _ =>
+        suggester(assign.assignName) -> assignment.`type`().getOrAny
+      case expression =>
         val `type` = expression.`type`().getOrAny
-        Some(suggestName(`type`), `type`)
+        suggester(`type`) -> `type`
     }
 
-    arguments.flatMap(createParameter).map {
+    arguments.map(createParameter).map {
       case (parameterName, scType) => s"$parameterName${ScalaTokenTypes.tCOLON} ${scType.presentableText}"
-    }.commaSeparated(parenthesize = true)
+    }.commaSeparated(model = Model.Parentheses)
   }
-
-  private[this] def suggestName(`type`: ScType)
-                               (implicit counter: mutable.Map[String, Int]) =
-    NameSuggester.suggestNamesByType(`type`)
-      .headOption
-      .fold("value") { name: String =>
-        counter(name) += 1
-
-        name + (counter(name) match {
-          case 0 => ""
-          case i => i
-        })
-      }
 }
 
 object ScalaTextLookupItem {

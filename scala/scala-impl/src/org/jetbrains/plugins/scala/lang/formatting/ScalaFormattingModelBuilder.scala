@@ -12,6 +12,9 @@ import com.intellij.psi.impl.source.tree.TreeUtil
 import com.intellij.psi.tree.IElementType
 import org.jetbrains.plugins.scala.lang.formatting.ScalaFormattingModelBuilder._
 import org.jetbrains.plugins.scala.lang.lexer.ScalaTokenTypes
+import org.jetbrains.plugins.scala.extensions.inWriteAction
+import org.jetbrains.plugins.scala.lang.formatting.processors.ScalaFmtPreFormatProcessor
+import org.jetbrains.plugins.scala.lang.formatting.settings.ScalaCodeStyleSettings
 
 sealed class ScalaFormattingModelBuilder extends FormattingModelBuilder {
 
@@ -23,6 +26,10 @@ sealed class ScalaFormattingModelBuilder extends FormattingModelBuilder {
     val astNode: ASTNode = containingFile.getNode
     assert(astNode != null)
     val block: ScalaBlock = new ScalaBlock(null, astNode, null, null, Indent.getAbsoluteNoneIndent, null, settings)
+    if (settings.getCustomSettings(classOf[ScalaCodeStyleSettings]).USE_SCALAFMT_FORMATTER) {
+      //preprocessing is done by this point, use this little side-effect to clean-up rnages synchronization
+      ScalaFmtPreFormatProcessor.clearRangesCache()
+    }
     new ScalaFormattingModel(containingFile, block, FormattingDocumentModelImpl.createOn(containingFile))
   }
 
@@ -43,7 +50,7 @@ object ScalaFormattingModelBuilder {
       if (prevNode != null && ScalaTokenTypes.WHITES_SPACES_FOR_FORMATTER_TOKEN_SET.contains(prevNode.getElementType)) {
         elementTypeToUse = prevNode.getElementType
       }
-      com.intellij.psi.formatter.FormatterUtil.replaceWhiteSpace(whiteSpace, leafElement, elementTypeToUse, textRange)
+      inWriteAction(com.intellij.psi.formatter.FormatterUtil.replaceWhiteSpace(whiteSpace, leafElement, elementTypeToUse, textRange))
       whiteSpace
     }
   }

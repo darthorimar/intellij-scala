@@ -1,10 +1,10 @@
 package org.jetbrains.plugins.scala.lang.formatting.settings;
 
+import com.intellij.application.options.CodeStyle;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.InvalidDataException;
 import com.intellij.openapi.util.WriteExternalException;
 import com.intellij.psi.codeStyle.CodeStyleSettings;
-import com.intellij.psi.codeStyle.CodeStyleSettingsManager;
 import com.intellij.psi.codeStyle.CustomCodeStyleSettings;
 import com.intellij.util.xmlb.SkipDefaultValuesSerializationFilters;
 import com.intellij.util.xmlb.XmlSerializer;
@@ -56,8 +56,16 @@ public class ScalaCodeStyleSettings extends CustomCodeStyleSettings {
   public boolean DO_NOT_INDENT_TUPLES_CLOSE_BRACE = true;
   public boolean ALIGN_TUPLE_ELEMENTS = false;
   public boolean INDENT_FIRST_PARAMETER_CLAUSE = false;
-  public boolean USE_SCALAFMT_FORMATTER = false;
   public String SCALAFMT_CONFIG_PATH = "";
+  public int FORMATTER = INTELLIJ_FORMATTER;
+  public boolean SHOW_SCALAFMT_INVALID_CODE_WARNINGS = false;
+
+  public static final int INTELLIJ_FORMATTER = 0;
+  public static final int SCALAFMT_FORMATTER = 1;
+
+  public boolean USE_SCALAFMT_FORMATTER() {
+    return FORMATTER == SCALAFMT_FORMATTER;
+  }
 
   public boolean USE_ALTERNATE_CONTINUATION_INDENT_FOR_PARAMS = false;
   public int ALTERNATE_CONTINUATION_INDENT_FOR_PARAMS = 4;
@@ -130,7 +138,7 @@ public class ScalaCodeStyleSettings extends CustomCodeStyleSettings {
   public boolean TYPE_ANNOTATION_EXCLUDE_MEMBER_OF_ANONYMOUS_CLASS = false;
   public boolean TYPE_ANNOTATION_EXCLUDE_MEMBER_OF_PRIVATE_CLASS = false;
   public boolean TYPE_ANNOTATION_EXCLUDE_CONSTANT = true;
-  public boolean TYPE_ANNOTATION_EXCLUDE_WHEN_TYPE_IS_OBVIOUS = true;
+  public boolean TYPE_ANNOTATION_EXCLUDE_WHEN_TYPE_IS_STABLE = true;
   public boolean TYPE_ANNOTATION_EXCLUDE_IN_SCRIPT = true;
   public boolean TYPE_ANNOTATION_EXCLUDE_IN_TEST_SOURCES = false;
 
@@ -161,6 +169,8 @@ public class ScalaCodeStyleSettings extends CustomCodeStyleSettings {
   public boolean REPLACE_FOR_GENERATOR_ARROW_WITH_UNICODE_CHAR = false;
   public boolean REPLACE_LAMBDA_WITH_GREEK_LETTER = false;
 
+  //global
+  public boolean REFORMAT_ON_COMPILE = false;
 
   @Override
   public void readExternal(Element parentElement) throws InvalidDataException {
@@ -357,7 +367,7 @@ public class ScalaCodeStyleSettings extends CustomCodeStyleSettings {
   public static String ALL_OTHER_IMPORTS = "all other imports";
 
   public static ScalaCodeStyleSettings getInstance(Project project) {
-    return CodeStyleSettingsManager.getSettings(project).getCustomSettings(ScalaCodeStyleSettings.class);
+    return CodeStyle.getSettings(project).getCustomSettings(ScalaCodeStyleSettings.class);
   }
 
   /**
