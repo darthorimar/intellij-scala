@@ -5,15 +5,7 @@ import org.jetbrains.plugins.scala.base.ScalaLightPlatformCodeInsightTestCaseAda
 import org.jetbrains.plugins.scala.lang.psi.api.ScalaFile
 import org.junit.Assert._
 
-class ConvertTest extends ScalaLightPlatformCodeInsightTestCaseAdapter {
-
-  def doTest(scala: String, kotlin: String): Unit = {
-    configureFromFileTextAdapter("dummy.scala", scala)
-    val psiFile = getFileAdapter
-    val res = Converter.convert(psiFile.asInstanceOf[ScalaFile])
-    assertEquals(kotlin.replaceAllLiterally(" ", "").replaceAllLiterally("\n", ""),
-      res.replaceAllLiterally(" ", "").replaceAllLiterally("\n", ""))
-  }
+class ConvertTest extends ConverterTestBase {
 
   def testFuncCall(): Unit = {
     doTest(
