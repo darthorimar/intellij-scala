@@ -22,6 +22,8 @@ class ExpressionConverterTest extends ConverterTestBase {
         |  }
       """.stripMargin)
 
+
+
   def testCasts(): Unit =
     doExprTest(
       """1.asInstanceOf[Long]
@@ -71,7 +73,5 @@ class ExpressionConverterTest extends ConverterTestBase {
         |      0
         |    }}        |
         |"""".stripMargin, true)
-
-
 
 }

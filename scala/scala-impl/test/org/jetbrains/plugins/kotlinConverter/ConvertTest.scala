@@ -4,6 +4,7 @@ import org.jetbrains.plugins.kotlinConverter.ast._
 import org.jetbrains.plugins.scala.base.ScalaLightPlatformCodeInsightTestCaseAdapter
 import org.jetbrains.plugins.scala.lang.psi.api.ScalaFile
 import org.junit.Assert._
+import org.junit.Ignore
 
 class ConvertTest extends ConverterTestBase {
 
@@ -168,6 +169,21 @@ class ConvertTest extends ConverterTestBase {
     doTest(
       """def a[T] = Seq.empty[T]""".stripMargin,
       """fun<T> a(): List<T> =emptyList<T>()""".stripMargin)
+
+  def testForYeild(): Unit =
+    doTest(
+      """val a = for {
+        |  i <- Seq(1,2)
+        |} yield i
+        |""".stripMargin,
+      """import kotlin.coroutines.experimental.buildSequence
+        |
+        |val a: List<Int> = buildSequence {
+        |  for (i in listOf(1, 2)) {
+        |      yield(i)
+        |   }
+        |}
+      """.stripMargin)
 
 }
 
