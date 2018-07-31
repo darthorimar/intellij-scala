@@ -13,7 +13,7 @@ abstract class ConverterTestBase extends ScalaLightPlatformCodeInsightTestCaseAd
       println(res)
     }
     else {
-      assertEquals(s"\n$res\n is not equals to\n $kotlin",
+      assertEquals(s"\n$res\n is not equals to\n $kotlin \n",
         unformat(kotlin),
         unformat(res))
     }

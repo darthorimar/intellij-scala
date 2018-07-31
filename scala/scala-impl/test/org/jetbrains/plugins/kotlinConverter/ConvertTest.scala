@@ -117,7 +117,27 @@ class ConvertTest extends ConverterTestBase {
         | }""".stripMargin)
 
 
+  def testSimpleValDef(): Unit =
+    doTest(
+      """val a = 5""".stripMargin,
+      """val a: Int = 5""".stripMargin)
 
+  def testValInClass(): Unit =
+    doTest(
+      """class A {
+        |  val a: Int
+        |  val b = 32
+        |  var c: Int
+        |  var d = 1
+        |}
+      """.stripMargin,
+      """open class A() {
+        |   val a: Int
+        |   val b: Int = 32
+        |   var c: Int
+        |   var d: Int = 1
+        |}
+      """.stripMargin)
 
 
   def testClassTypeParams(): Unit =
@@ -129,8 +149,6 @@ class ConvertTest extends ConverterTestBase {
     doTest(
       """def a[T] = Seq.empty[T]""".stripMargin,
       """fun<T> a(): List<T> =emptyList<T>()""".stripMargin)
-
-
 
 }
 
