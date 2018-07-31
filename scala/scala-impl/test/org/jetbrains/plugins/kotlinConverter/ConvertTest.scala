@@ -155,6 +155,15 @@ class ConvertTest extends ConverterTestBase {
       """class A[T]""".stripMargin,
       """open class A<T>()""".stripMargin)
 
+  def testImplicits(): Unit =
+    doExprTest(
+      """ implicit def toStr(a: Int) = a.toString
+        |  def q(s: String) = s
+        |  println(q(1))""".stripMargin,
+      """fun toStr(a: Int): String =a.toString
+        |  fun q(s: String): String =s
+        |  println(q(toStr(1)))""".stripMargin)
+
   def testFunctionTypeParams(): Unit =
     doTest(
       """def a[T] = Seq.empty[T]""".stripMargin,
