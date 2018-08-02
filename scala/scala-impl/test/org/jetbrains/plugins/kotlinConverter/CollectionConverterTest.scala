@@ -55,13 +55,20 @@ class CollectionConverterTest extends ConverterTestBase {
 
   def testSeqNotEmpty(): Unit =
     doExprTest(
-      """val s1 = Seq(1,2)
-        |val s2 = Seq(2,3)
-        |s1 ++ s2
+      """Seq(1,2).nonEmpty()
       """.stripMargin,
-      """val s1: List<Int> = listOf(1, 2)
-        |val s2: List<Int> = listOf(2, 3)
-        |s1 + s2""".stripMargin)
+      """listOf(1, 2).isNotEmpty()""".stripMargin)
+
+  def testSeqSize(): Unit =
+    doExprTest(
+      """Seq(1,2).size()
+      """.stripMargin,
+      """listOf(1, 2).size""".stripMargin)
+
+  def testSeqOfOptionFlatten(): Unit =
+    doExprTest(
+      """Seq(Some(1),None).flatten""".stripMargin,
+      """listOf(1, null).filterNotNull()""".stripMargin, true)
 
 
   def testStringRepeat(): Unit =
