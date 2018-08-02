@@ -64,7 +64,7 @@ class ExpressionConverterTest extends ConverterTestBase {
       """Some(1) match {
         |   case Some(x) => x + 1
         |   case _ => 0
-        |}"""".stripMargin,
+        |}""".stripMargin,
       """{
         |     val match = 1
         |    case class `Some(x)_data`(public val x: Any)
@@ -84,6 +84,6 @@ class ExpressionConverterTest extends ConverterTestBase {
         |        0
         |      }}
         |
-        |  }""".stripMargin, true)
+        |  }""".stripMargin)
 
 }
