@@ -53,6 +53,23 @@ class ExpressionConverterTest extends ConverterTestBase {
         |    5
         |  }""".stripMargin)
 
+  def testInfix(): Unit =
+    doExprTest(
+      """Seq(1) map (x => x + 1)""".stripMargin,
+      """ try {
+        |    1
+        |  }catch (e: scala.Exception) {
+        |    2
+        |  } catch (e: Throwable) {
+        |    when {
+        |      else -> {
+        |        3
+        |      }}
+        |
+        |  } finally {
+        |    5
+        |  }""".stripMargin, true)
+
 
   def testStringInterpolation(): Unit =
     doExprTest(

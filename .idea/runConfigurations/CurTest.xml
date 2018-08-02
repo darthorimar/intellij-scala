@@ -8,8 +8,9 @@
       </pattern>
     </extension>
     <option name="PACKAGE_NAME" value="org.jetbrains.plugins.kotlinConverter" />
-    <option name="MAIN_CLASS_NAME" value="org.jetbrains.plugins.kotlinConverter.ConvertTest" />
-    <option name="METHOD_NAME" value="" />
+    <option name="MAIN_CLASS_NAME" value="org.jetbrains.plugins.kotlinConverter.InfixConverterTest" />
+    <option name="METHOD_NAME" value="testInfix" />
+    <option name="TEST_OBJECT" value="method" />
     <option name="VM_PARAMETERS" value="-Xms128m -Xmx1024m -ea -Didea.system.path=$USER_HOME$/.ScalaPluginIC/test-system -Didea.config.path=$USER_HOME$/.ScalaPluginIC/test-config -Dplugin.path=$PROJECT_DIR$/target/plugin/Scala" />
     <option name="PARAMETERS" value="" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />

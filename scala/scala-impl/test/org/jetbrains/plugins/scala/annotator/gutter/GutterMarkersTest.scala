@@ -14,10 +14,10 @@ class GutterMarkersTest extends ScalaFixtureTestCase {
   protected def testLineMarker(expectedTooltip: String): Unit = {
     myFixture.doHighlighting()
     if (CodeInsightTestFixtureImpl.processGuttersAtCaret(getEditor, getProject, mark => {
-      assertEquals(expectedTooltip, mark.getTooltipText)
+      assert(expectedTooltip == mark.getTooltipText)
       false
     }
-    )) fail("Gutter mark expected.")
+    )) assert(false, "Gutter mark expected.")
   }
 
   protected def testOverridesImplementsMarker(superName: String, isOverride: Boolean, member: String): Unit =
@@ -141,7 +141,7 @@ class GutterMarkersTest extends ScalaFixtureTestCase {
   ) {
     myFixture.doHighlighting()
     if (!CodeInsightTestFixtureImpl.processGuttersAtCaret(getEditor, getProject, Function.const(false)))
-      fail("Gutter mark expected.")
+      assert(false, "Gutter mark expected.")
   }
 
   @Test
