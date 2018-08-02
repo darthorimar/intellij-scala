@@ -38,7 +38,6 @@ class ExpressionConverterTest extends ConverterTestBase {
       """try { 1 } catch {
         |   case e: Exception => 2
         |   case _ => 3
-        |   case e
         |} finally { 5 }""".stripMargin,
       """ try {
         |    1
@@ -60,30 +59,31 @@ class ExpressionConverterTest extends ConverterTestBase {
       """ s"${1} + $None" """.stripMargin,
       """ "${1} + $null"""".stripMargin)
 
-//  def testSomeInWhen(): Unit =
-//    doExprTest(
-//      """Some(1) match {
-//        |   case Some(x) => x + 1
-//        |   case _ => 0
-//        |}"""".stripMargin,
-//      """
-//        |  val match1 = Some()(1)
-//        |  data class `Some(x)_data`(public val x: Any)
-//        |  val `Some(x)` by lazy {
-//        |    if (match1 != null){
-//        |      val x = match1
-//        |      return@lazy `Some(x)_data`(x)
-//        |    }
-//        |    return@lazy null
-//        |  }
-//        |  return when {
-//        |    `Some(x)` != null -> {
-//        |      val x = `Some(x)`
-//        |      x + 1
-//        |    }
-//        |    else -> {
-//        |      0
-//        |    }}
-//        |"""".stripMargin, true)
+  def testSomeInWhen(): Unit =
+    doExprTest(
+      """Some(1) match {
+        |   case Some(x) => x + 1
+        |   case _ => 0
+        |}"""".stripMargin,
+      """{
+        |     val match = 1
+        |    case class `Some(x)_data`(public val x: Any)
+        |    val `Some(x)` by lazy {
+        |      if (match != null){
+        |         val (x) = match
+        |        return@lazy `Some(x)_data`(x)
+        |      }
+        |      return@lazy null
+        |    }
+        |    when {
+        |      `Some(x)` != null -> {
+        |         val (x) = `Some(x)`
+        |        x + 1
+        |      }
+        |      else -> {
+        |        0
+        |      }}
+        |
+        |  }""".stripMargin, true)
 
 }

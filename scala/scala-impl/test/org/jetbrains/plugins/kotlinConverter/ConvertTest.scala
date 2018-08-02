@@ -37,55 +37,51 @@ class ConvertTest extends ConverterTestBase {
         |  case _ if 1 == 1 => 2
         | }
       """.stripMargin,
-      """fun a(x: Any): Any {
-        |    val match = x
-        |
-        |    data class `B(a, B(C(e: Int), C(d)))_data`(public val a: Any, public val e: Int, public val d: Any)
-        |    data class `B(a, b)_data`(public val a: Any, public val b: Any)
-        |
-        |    val `B(a, B(C(e: Int), C(d)))` by lazy {
-        |        if (match is B) {
-        |            val (a, l) = match
-        |            if (l is B) {
-        |                val (l1, l2) = l
-        |                if (l1 is C && l2 is C) {
-        |                    val (e) = l1
-        |                    val (d) = l2
-        |                    if (e is Int) if (e > 3) return@lazy `B(a, B(C(e: Int), C(d)))_data`(a, e, d)
-        |                }
-        |            }
+      """fun a(x: Any): Int {
+        |  val match = x
+        |  case class `B(a, B(C(e: Int), C(d)))_data`(public val a: Any, public val e: Int, public val d: Any)
+        |  case class `B(a, b)_data`(public val a: Any, public val b: Any)
+        |  val `B(a, B(C(e: Int), C(d)))` by lazy {
+        |    if (match is B){
+        |       val (a, l) = match
+        |      if (l is B){
+        |         val (l1, l2) = l
+        |        if (l1 is C && l2 is C){
+        |           val (e) = l1
+        |           val (d) = l2
+        |          if (e is Int)if (e > 3)return@lazy `B(a, B(C(e: Int), C(d)))_data`(a, e, d)
         |        }
-        |        return@lazy null
+        |      }
         |    }
-        |    val `B(a, b)` by lazy {
-        |        if (match is B) {
-        |            val (a, b) = match
-        |            return@lazy `B(a, b)_data`(a, b)
-        |        }
-        |        return@lazy null
+        |    return@lazy null
+        |  }
+        |  val `B(a, b)` by lazy {
+        |    if (match is B){
+        |       val (a, b) = match
+        |      return@lazy `B(a, b)_data`(a, b)
         |    }
-        |    return when {
-        |        `B(a, B(C(e: Int), C(d)))` != null -> {
-        |            val (a, e, d) = `B(a, B(C(e: Int), C(d)))`
-        |            e
-        |        }
-        |        `B(a, b)` != null -> {
-        |            val (a, b) = `B(a, b)`
-        |            42
-        |        }
-        |        match is Int && match == 2 -> {
-        |            match
-        |        }
-        |        match == 2 && 1 == 1 -> {
-        |            1
-        |        }
-        |        1 == 1 -> {
-        |            2
-        |        }
+        |    return@lazy null
+        |  }
+        |  return when {
+        |    `B(a, B(C(e: Int), C(d)))` != null -> {
+        |       val (a, e, d) = `B(a, B(C(e: Int), C(d)))`
+        |      e
         |    }
+        |    `B(a, b)` != null -> {
+        |       val (a, b) = `B(a, b)`
+        |      42
+        |    }
+        |    match is Int && match == 2 -> {
+        |      match
+        |    }
+        |    match == 2 && 1 == 1 -> {
+        |      1
+        |    }
+        |    1 == 1 -> {
+        |      2
+        |    }}
         |
         |}
-        |
         |interface A
         |data class B(public val a: A, public val b: A) : A()
         |data class C(public val c: Int) : A() """.stripMargin)
