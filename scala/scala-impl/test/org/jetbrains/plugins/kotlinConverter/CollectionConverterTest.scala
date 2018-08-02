@@ -30,6 +30,39 @@ class CollectionConverterTest extends ConverterTestBase {
       """Seq.empty.init""".stripMargin,
       """emptyList().dropLast(1)""".stripMargin)
 
+  def testSeqHead(): Unit =
+    doExprTest(
+      """Seq.empty.head""".stripMargin,
+      """emptyList().first()""".stripMargin)
+
+  def testSeqApply(): Unit =
+    doExprTest(
+      """val s = Seq(1,2)
+        |s(0)
+      """.stripMargin,
+      """val s: List<Int> = listOf(1, 2)
+        |s[0]""".stripMargin)
+
+  def testSeqConcat(): Unit =
+    doExprTest(
+      """val s1 = Seq(1,2)
+        |val s2 = Seq(2,3)
+        |s1 ++ s2
+      """.stripMargin,
+      """val s1: List<Int> = listOf(1, 2)
+        |val s2: List<Int> = listOf(2, 3)
+        |s1 + s2""".stripMargin)
+
+  def testSeqNotEmpty(): Unit =
+    doExprTest(
+      """val s1 = Seq(1,2)
+        |val s2 = Seq(2,3)
+        |s1 ++ s2
+      """.stripMargin,
+      """val s1: List<Int> = listOf(1, 2)
+        |val s2: List<Int> = listOf(2, 3)
+        |s1 + s2""".stripMargin)
+
 
   def testStringRepeat(): Unit =
     doExprTest(
