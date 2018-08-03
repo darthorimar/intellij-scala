@@ -14,6 +14,12 @@ class ConvertTest extends ConverterTestBase {
       """  "ny".substring(1,2)""")
   }
 
+  def testAutoImport(): Unit = {
+    doExprTest(
+      """ "ny".substring(1,2)""",
+      """  "ny".substring(1,2)""")
+  }
+
   def testUncarry(): Unit = {
     doTest(
       """def a(x: Int, b: String)(c: Char) = 1
