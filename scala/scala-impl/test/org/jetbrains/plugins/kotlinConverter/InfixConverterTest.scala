@@ -3,10 +3,7 @@ package org.jetbrains.plugins.kotlinConverter
 class InfixConverterTest extends ConverterTestBase {
   def testSeqOfOptionFlatten(): Unit =
     doTest(
-      """class A {
-        |}
-        |object A {def a = 5}
-        |object B
+      """val a : List[_] = List.empty
       """.stripMargin,
       """open class A() {
         |  companion object {
