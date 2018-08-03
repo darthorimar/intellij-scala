@@ -1,11 +1,5 @@
 package org.jetbrains.plugins.kotlinConverter
 
-import org.jetbrains.plugins.kotlinConverter.ast._
-import org.jetbrains.plugins.scala.base.ScalaLightPlatformCodeInsightTestCaseAdapter
-import org.jetbrains.plugins.scala.lang.psi.api.ScalaFile
-import org.junit.Assert._
-import org.junit.Ignore
-
 class ConvertTest extends ConverterTestBase {
 
   def testFuncCall(): Unit = {
@@ -14,11 +8,10 @@ class ConvertTest extends ConverterTestBase {
       """  "ny".substring(1,2)""")
   }
 
-  def testAutoImport(): Unit = {
-    doExprTest(
-      """ "ny".substring(1,2)""",
-      """  "ny".substring(1,2)""")
-  }
+  def testVararg(): Unit =
+    doTest(
+      """def foo(xs: String*) = xs""".stripMargin,
+      """fun foo(vararg xs: String): List<String> =xs""".stripMargin)
 
   def testUncarry(): Unit = {
     doTest(

@@ -2,7 +2,9 @@ package org.jetbrains.plugins.kotlinConverter
 
 class InfixConverterTest extends ConverterTestBase {
   def testSeqOfOptionFlatten(): Unit =
-    doExprTest(
-      """Seq(Some(1),None).flatten""".stripMargin,
-      """listOf(1, null).filterNotNull()""".stripMargin, true)
+    doTest(
+      """def foo(xs: String*) = xs
+        |def bar = foo(Seq(1,2) :_*)
+      """.stripMargin,
+      """fun foo(vararg xs: String): List<String> =xs""".stripMargin, true)
 }
