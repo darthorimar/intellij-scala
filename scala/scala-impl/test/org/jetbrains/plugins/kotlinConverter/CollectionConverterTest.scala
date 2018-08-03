@@ -5,6 +5,10 @@ class CollectionConverterTest extends ConverterTestBase {
     doExprTest(" Some(1).map(x => x + 1).get",
       "1?.let { x -> x + 1}!!")
 
+  def testOptionGetOrElse(): Unit =
+    doExprTest(" Some(1).getOrElse(2)",
+    "1 :? 2")
+
   def testListCon(): Unit =
     doExprTest(
       "1 :: Nil",
@@ -68,7 +72,7 @@ class CollectionConverterTest extends ConverterTestBase {
   def testSeqOfOptionFlatten(): Unit =
     doExprTest(
       """Seq(Some(1),None).flatten""".stripMargin,
-      """listOf(1, null).filterNotNull()""".stripMargin, true)
+      """listOf(1, null).filterNotNull()""".stripMargin)
 
 
   def testStringRepeat(): Unit =
