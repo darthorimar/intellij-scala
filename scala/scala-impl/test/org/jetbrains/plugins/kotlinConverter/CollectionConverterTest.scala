@@ -7,7 +7,7 @@ class CollectionConverterTest extends ConverterTestBase {
 
   def testOptionGetOrElse(): Unit =
     doExprTest(" Some(1).getOrElse(2)",
-    "1 :? 2")
+      "1 :? 2")
 
   def testListCon(): Unit =
     doExprTest(
@@ -79,5 +79,15 @@ class CollectionConverterTest extends ConverterTestBase {
     doExprTest(
       """ "nya" * 4""".stripMargin,
       """ "nya".repeat(4)""".stripMargin)
+
+  def testPairConstruct(): Unit =
+    doExprTest(
+      """ 1 -> 2 """.stripMargin,
+      """ 1 to 2""".stripMargin)
+
+  def testPairComponents(): Unit =
+    doExprTest(
+      """ (1 -> 2)._1 """.stripMargin,
+      """ (1 to 2).first""".stripMargin)
 
 }
