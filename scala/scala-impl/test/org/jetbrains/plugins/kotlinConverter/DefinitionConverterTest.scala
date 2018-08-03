@@ -14,6 +14,22 @@ class DefinitionConverterTest extends ConverterTestBase {
         |open class C() : A(1), B
       """.stripMargin)
 
+  def companionObjectTest(): Unit =
+    doTest(
+      """class A {
+        |}
+        |object A {def a = 5}
+        |object B
+      """.stripMargin,
+      """open class A() {
+        |  companion object {
+        |    public fun a(): Int =5
+        |  }
+        |}
+        |object B
+        |
+        |}""".stripMargin)
+
   def testMultipleConstctorParams(): Unit =
     doTest(
       """
@@ -37,4 +53,5 @@ class DefinitionConverterTest extends ConverterTestBase {
       """.stripMargin)
 
   class A(a: Int)
+
 }
