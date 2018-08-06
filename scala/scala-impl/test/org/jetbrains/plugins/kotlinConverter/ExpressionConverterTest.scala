@@ -41,7 +41,7 @@ class ExpressionConverterTest extends ConverterTestBase {
         |} finally { 5 }""".stripMargin,
       """ try {
         |    1
-        |  }catch (e: scala.Exception) {
+        |  }catch (e: Exception) {
         |    2
         |  } catch (e: Throwable) {
         |    when {

@@ -9,7 +9,7 @@ class DefinitionConverterTest extends ConverterTestBase {
         |class C extends A(1) with B
       """.stripMargin,
       """
-        |open class A(a: Int)
+        |open class A(private val a: Int)
         |interface B
         |open class C() : A(1), B
       """.stripMargin)
@@ -36,7 +36,7 @@ class DefinitionConverterTest extends ConverterTestBase {
         |class A(a: Int, b: String)
         |class C extends A(1, "nya")
       """.stripMargin,
-      """open class A(a: Int,  b: String)
+      """open class A(private val a: Int, private val b: String)
         |open class C() : A(1, "nya")
       """.stripMargin)
 
