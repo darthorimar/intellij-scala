@@ -61,7 +61,13 @@ class ExpressionConverterTest extends ConverterTestBase {
   def testLambda(): Unit =
     doExprTest(
       """Seq(1).map(x => x + 1)""".stripMargin,
-      """""".stripMargin, true)
+      """listOf(1).map{x -> x + 1}""".stripMargin)
+
+  def testLambdaWithUnderscore(): Unit =
+    doExprTest(
+      """Seq(1).map(_+1)""".stripMargin,
+      """listOf(1).map { it + 1}""".stripMargin)
+
 
 
   def testStringInterpolation(): Unit =
