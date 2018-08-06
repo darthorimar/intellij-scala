@@ -1,6 +1,6 @@
 package org.jetbrains.plugins.kotlinConverter
 
-class InfixConverterTest extends ConverterTestBase {
+class DebugConveterTest extends ConverterTestBase {
   def testSeqOfOptionFlatten(): Unit =
     doTest(
       """package org.jetbrains.plugins.kotlinConverter.scopes
@@ -45,12 +45,5 @@ class InfixConverterTest extends ConverterTestBase {
         |
         |
       """.stripMargin,
-      """open class A() {
-        |  companion object {
-        |    public fun a(): Int =5
-        |  }
-        |}
-        |object B
-        |
-        |}""".stripMargin, true)
+      """""".stripMargin, true)
 }
