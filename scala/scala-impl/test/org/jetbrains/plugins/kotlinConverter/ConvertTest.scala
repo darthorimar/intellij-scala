@@ -82,8 +82,8 @@ class ConvertTest extends ConverterTestBase {
         |
         |}
         |interface A
-        |data class B(public val a: A, public val b: A) : A()
-        |data class C(public val c: Int) : A() """.stripMargin)
+        |data class B(val a: A, val b: A) : A()
+        |data class C(val c: Int) : A() """.stripMargin)
   }
 
   def testOverride(): Unit =
