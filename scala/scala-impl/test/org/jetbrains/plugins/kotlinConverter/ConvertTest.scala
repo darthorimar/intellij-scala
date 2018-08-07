@@ -37,27 +37,27 @@ class ConvertTest extends ConverterTestBase {
         | }
       """.stripMargin,
       """fun a(x: Any): Int {
-        |  val match = x
-        |  case class `B(a, B(C(e: Int), C(d)))_data`(public val a: Any, public val e: Int, public val d: Any)
-        |  case class `B(a, b)_data`(public val a: Any, public val b: Any)
+        |   val match = x
+        |  data class `B(a, B(C(e: Int), C(d)))_data`(public val a: A, public val e: Int, public val d: Int)
+        |  data class `B(a, b)_data`(public val a: A, public val b: A)
         |  val `B(a, B(C(e: Int), C(d)))` by lazy {
-        |    if (match is B){
+        |    if (match is B) {
         |       val (a, l) = match
-        |      if (l is B){
+        |      if (a is A && l is B) {
         |         val (l1, l2) = l
-        |        if (l1 is C && l2 is C){
+        |        if (l1 is C && l2 is C) {
         |           val (e) = l1
         |           val (d) = l2
-        |          if (e is Int)if (e > 3)return@lazy `B(a, B(C(e: Int), C(d)))_data`(a, e, d)
+        |          if (e is Int && d is Int) if (e > 3) return@lazy `B(a, B(C(e: Int), C(d)))_data`(a, e, d)
         |        }
         |      }
         |    }
         |    return@lazy null
         |  }
         |  val `B(a, b)` by lazy {
-        |    if (match is B){
+        |    if (match is B) {
         |       val (a, b) = match
-        |      return@lazy `B(a, b)_data`(a, b)
+        |      if (a is A && b is A) return@lazy `B(a, b)_data`(a, b)
         |    }
         |    return@lazy null
         |  }
@@ -78,12 +78,13 @@ class ConvertTest extends ConverterTestBase {
         |    }
         |    1 == 1 -> {
         |      2
-        |    }}
+        |    }
+        |    else -> throw Throwable("Match exception")}
         |
         |}
         |interface A
-        |data class B(val a: A, val b: A) : A
-        |data class C(val c: Int) : A """.stripMargin)
+        |data class B( val a: A,  val b: A) : A
+        |data class C( val c: Int) : A """.stripMargin)
   }
 
   def testOverride(): Unit =
@@ -114,7 +115,7 @@ class ConvertTest extends ConverterTestBase {
       """.stripMargin,
       """listOf(1, 2, 3).map { val match = it
         |when {
-        |  match >= 3 -> {
+        |   match is Int && match >= 3 -> {
         |    match - 3
         |  }
         |  else -> {
@@ -174,7 +175,7 @@ class ConvertTest extends ConverterTestBase {
       """import kotlin.coroutines.experimental.buildSequence
         |
         |val a: List<Int> = buildSequence {
-        |  for (i in listOf(1, 2)) {
+        |  for (i: Int in listOf(1, 2)) {
         |      yield(i)
         |   }
         |}

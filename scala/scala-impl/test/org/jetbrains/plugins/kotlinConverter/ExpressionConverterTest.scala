@@ -12,8 +12,8 @@ class ExpressionConverterTest extends ConverterTestBase {
         |   println(i + j)
         |}""".stripMargin,
       """
-        |for (i in listOf(1, 2)) {
-        |    for (j in listOf(2, 3)) {
+        |for (i: Int in listOf(1, 2)) {
+        |    for (j: Int in listOf(2, 3)) {
         |      val a = i
         |      if (a > 2){
         |        println(i + j)
@@ -53,11 +53,6 @@ class ExpressionConverterTest extends ConverterTestBase {
         |    5
         |  }""".stripMargin)
 
-//  def testInfix(): Unit =
-//    doExprTest(
-//      """Seq(1) map (x => x + 1)""".stripMargin,
-//      """ listOf(1).map {""".stripMargin)
-
   def testLambda(): Unit =
     doExprTest(
       """Seq(1).map(x => x + 1)""".stripMargin,
@@ -82,24 +77,24 @@ class ExpressionConverterTest extends ConverterTestBase {
         |   case _ => 0
         |}""".stripMargin,
       """{
-        |     val match = 1
-        |    case class `Some(x)_data`(public val x: Any)
-        |    val `Some(x)` by lazy {
-        |      if (match != null){
-        |         val (x) = match
-        |        return@lazy `Some(x)_data`(x)
-        |      }
-        |      return@lazy null
+        |   val match = 1
+        |  data class `Some(x)_data`(public val x: Int)
+        |  val `Some(x)` by lazy {
+        |    if (match != null) {
+        |       val (x) = match
+        |      if (x is Int) return@lazy `Some(x)_data`(x)
         |    }
-        |    when {
-        |      `Some(x)` != null -> {
-        |         val (x) = `Some(x)`
-        |        x + 1
-        |      }
-        |      else -> {
-        |        0
-        |      }}
+        |    return@lazy null
+        |  }
+        |  when {
+        |    `Some(x)` != null -> {
+        |       val (x) = `Some(x)`
+        |      x + 1
+        |    }
+        |    else -> {
+        |      0
+        |    }}
         |
-        |  }""".stripMargin)
+        |}""".stripMargin)
 
 }
