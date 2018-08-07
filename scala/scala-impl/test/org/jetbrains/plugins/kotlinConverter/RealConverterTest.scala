@@ -53,10 +53,10 @@ class RealConverterTest extends ConverterTestBase {
         |  fun updated(update: (T) -> T): SettedScopedVal<T> =set(update(get()))
         |  fun<R> call(func: (T) -> R): R =func(get())
         |  companion object  {
-        |    fun<T> scoped(vararg vals: SettedScopedVal<*>, body: T): T {
+        |    fun<T> scoped(vararg vals: SettedScopedVal<*>, body: (Unit) -> T): T {
         |      vals.forEach { it.set() }
         |      return try {
-        |        body
+        |        body()
         |      } finally {
         |        vals.forEach { it.unset() }
         |      }

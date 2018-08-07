@@ -166,6 +166,13 @@ class ConvertTest extends ConverterTestBase {
       """def a[T] = Seq.empty[T]""".stripMargin,
       """fun<T> a(): List<T> =emptyList<T>()""".stripMargin)
 
+  def testCallByName: Unit =
+    doTest(
+      """def a(x: => Int) = x
+        |def q = a(1)""".stripMargin,
+      """fun a(x: (Unit) -> Int): Int =x()
+        |fun q(): Int =a { 1 }""".stripMargin)
+
   def testForYeild(): Unit =
     doTest(
       """val a = for {
