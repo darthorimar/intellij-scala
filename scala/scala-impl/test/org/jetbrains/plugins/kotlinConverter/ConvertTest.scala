@@ -40,7 +40,7 @@ class ConvertTest extends ConverterTestBase {
         |   val match = x
         |  data class `B(a, B(C(e: Int), C(d)))_data`(public val a: A, public val e: Int, public val d: Int)
         |  data class `B(a, b)_data`(public val a: A, public val b: A)
-        |  val `B(a, B(C(e: Int), C(d)))` by lazy {
+        |  val `B(a, B(C(e: Int), C(d)))` by lazy run {
         |    if (match is B) {
         |       val (a, l) = match
         |      if (a is A && l is B) {
@@ -54,7 +54,7 @@ class ConvertTest extends ConverterTestBase {
         |    }
         |    return@lazy null
         |  }
-        |  val `B(a, b)` by lazy {
+        |  val `B(a, b)` by lazy run {
         |    if (match is B) {
         |       val (a, b) = match
         |      if (a is A && b is A) return@lazy `B(a, b)_data`(a, b)
@@ -79,8 +79,8 @@ class ConvertTest extends ConverterTestBase {
         |    1 == 1 -> {
         |      2
         |    }
-        |    else -> throw Throwable("Match exception")}
-        |
+        |    else -> throw Exception("Match exception")
+        |  }
         |}
         |interface A
         |data class B( val a: A,  val b: A) : A
