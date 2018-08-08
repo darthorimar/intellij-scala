@@ -83,8 +83,18 @@ class ConvertTest extends ConverterTestBase {
         |  }
         |}
         |interface A
-        |data class B( val a: A,  val b: A) : A
-        |data class C( val c: Int) : A """.stripMargin)
+        |data class B( val a: A,  val b: A) : A {
+        |  companion object  {
+        |    fun apply(a: A, b: A): B =B(a, b)
+        |    fun unapply(x: B): B? =x
+        |  }
+        |}
+        |data class C( val c: Int) : A {
+        |  companion object  {
+        |    fun apply(c: Int): C =C(c)
+        |    fun unapply(x: C): C? =x
+        |  }
+        |}""".stripMargin)
   }
 
   def testUnapplyInMatch(): Unit =
@@ -124,8 +134,18 @@ class ConvertTest extends ConverterTestBase {
         |  }
         |}
         |interface I
-        |data class A( val i: I) : I
-        |data class B( val x: Int) : I
+        |data class A( val i: I) : I {
+        |  companion object  {
+        |    fun apply(i: I): A =A(i)
+        |    fun unapply(x: A): A? =x
+        |  }
+        |}
+        |data class B( val x: Int) : I {
+        |  companion object  {
+        |    fun apply(x: Int): B =B(x)
+        |    fun unapply(x: B): B? =x
+        |  }
+        |}
         |object O {
         |  fun unapply(arg: Int): A? =A.apply(B.apply(1))
         |}""".stripMargin)
