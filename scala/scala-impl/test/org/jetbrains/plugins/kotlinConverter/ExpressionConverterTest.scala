@@ -79,7 +79,7 @@ class ExpressionConverterTest extends ConverterTestBase {
       """run {
         |   val match = 1
         |  data class `Some(x)_data`(public val x: Int)
-        |  val `Some(x)` by lazy run {
+        |  val `Some(x)` by lazy {
         |    if (match != null) {
         |       val (x) = match
         |      if (x is Int) return@lazy `Some(x)_data`(x)

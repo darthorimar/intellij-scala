@@ -40,7 +40,7 @@ class ConvertTest extends ConverterTestBase {
         |   val match = x
         |  data class `B(a, B(C(e: Int), C(d)))_data`(public val a: A, public val e: Int, public val d: Int)
         |  data class `B(a, b)_data`(public val a: A, public val b: A)
-        |  val `B(a, B(C(e: Int), C(d)))` by lazy run {
+        |  val `B(a, B(C(e: Int), C(d)))` by lazy {
         |    if (match is B) {
         |       val (a, l) = match
         |      if (a is A && l is B) {
@@ -54,7 +54,7 @@ class ConvertTest extends ConverterTestBase {
         |    }
         |    return@lazy null
         |  }
-        |  val `B(a, b)` by lazy run {
+        |  val `B(a, b)` by lazy {
         |    if (match is B) {
         |       val (a, b) = match
         |      if (a is A && b is A) return@lazy `B(a, b)_data`(a, b)
@@ -86,6 +86,49 @@ class ConvertTest extends ConverterTestBase {
         |data class B( val a: A,  val b: A) : A
         |data class C( val c: Int) : A """.stripMargin)
   }
+
+  def testUnapplyInMatch(): Unit =
+    doTest(
+      """trait I
+        |  case class A(i: I) extends I
+        |  case class B(x: Int) extends I
+        |  object O {
+        |    def unapply(arg: Int): Option[A] = Some(A(B(1)))
+        |  }
+        |  val q = 1 match {
+        |    case O(A(B(x))) => x
+        |  }""".stripMargin,
+      """val q: Int = run {
+        |   val match = 1
+        |  data class `O(A(B(x)))_data`(public val x: Int)
+        |  val `O(A(B(x)))` by lazy {
+        |     val l = O.unapply(match)
+        |    if (l != null && l is A) {
+        |       val (l1) = l
+        |      if (l1 is A) {
+        |         val (l2) = l1
+        |        if (l2 is B) {
+        |           val (x) = l2
+        |          if (x is Int) return@lazy `O(A(B(x)))_data`(x)
+        |        }
+        |      }
+        |    }
+        |    return@lazy null
+        |  }
+        |  when {
+        |    `O(A(B(x)))` != null -> {
+        |       val (x) = `O(A(B(x)))`
+        |      x
+        |    }
+        |    else -> throw Exception("Match exception")
+        |  }
+        |}
+        |interface I
+        |data class A( val i: I) : I
+        |data class B( val x: Int) : I
+        |object O {
+        |  fun unapply(arg: Int): A? =A.apply(B.apply(1))
+        |}""".stripMargin)
 
   def testOverride(): Unit =
     doTest(
