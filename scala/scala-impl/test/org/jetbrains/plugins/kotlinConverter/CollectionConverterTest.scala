@@ -90,4 +90,15 @@ class CollectionConverterTest extends ConverterTestBase {
       """ (1 -> 2)._1 """.stripMargin,
       """ (1 to 2).first""".stripMargin)
 
+  def testPairType(): Unit =
+    doTest(
+      """ def foo(a: (Int, String)) =  a
+        | def bar(a: (Int, String, Char)) =  a
+      """.stripMargin,
+      """ fun foo(a: Pair<Int, String>): Pair<Int, String> =a
+        | fun bar(a: Tuple3<Int, String, Char>): Tuple3<Int, String, Char> =a
+      """.stripMargin)
+
+
+
 }
