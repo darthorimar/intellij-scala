@@ -9,6 +9,8 @@ sealed class Try<out T> {
     abstract fun <U> map(f: (T) -> U): Try<U>
     abstract fun filter(p: (T) -> Boolean): Try<T>
     abstract fun toOption(): T?
+    abstract fun <U> recover(f: (Throwable) -> U): Try<U>
+    abstract fun <U> recoverWith(f: (Throwable) -> Try<U>): Try<U>
 }
 
 fun <T> runTry(block: () -> T): Try<T> =
@@ -36,6 +38,23 @@ class Failure<out T>(val exception: Throwable) : Try<T>() {
     override fun <U> map(f: (T) -> U): Try<U> = this as Try<U>
     override fun filter(p: (T) -> Boolean): Try<T> = this
     override fun toOption(): T? = null
+    override fun <U> recover(f: (Throwable) -> U): Try<U> =
+            try {
+                Success(f(exception))
+            } catch (e: MatchError) {
+                this as Try<U>
+            } catch (e: Throwable) {
+                Failure(e)
+            }
+
+    override fun <U> recoverWith(f: (Throwable) -> Try<U>): Try<U> =
+            try {
+                f(exception)
+            } catch (e: MatchError) {
+                this as Try<U>
+            } catch (e: Throwable) {
+                Failure(e)
+            }
 }
 
 class Success<out T>(public val value: T) : Try<T>() {
@@ -62,4 +81,6 @@ class Success<out T>(public val value: T) : Try<T>() {
 
     override fun toOption(): T? = value
 
+    override fun <U> recover(f: (Throwable) -> U): Try<U> = this as Try<U>
+    override fun <U> recoverWith(f: (Throwable) -> Try<U>): Try<U> = this as Try<U>
 }
