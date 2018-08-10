@@ -1,5 +1,7 @@
 package org.jetbrains.plugins.kotlinConverter
 
+import scala.util.Try
+
 class ConvertTest extends ConverterTestBase {
 
   def testFuncCall(): Unit = {
@@ -21,6 +23,7 @@ class ConvertTest extends ConverterTestBase {
       """fun a(x: Int, b: String, c: Char): Int =1
         |fun b(): Int =a(1, "2", '3')""".stripMargin)
   }
+
   def testMatch(): Unit = {
     doTest(
       """
@@ -252,6 +255,15 @@ class ConvertTest extends ConverterTestBase {
       """.stripMargin)
 
 
+  def testTupleCreate(): Unit =
+    doTest(
+      """def foo = (1,2,3)
+        |def bar = (1,2)
+      """.stripMargin,
+      """fun foo(): Tuple3<Int, Int, Int> =Tuple3<Int, Int, Int>(1, 2, 3)
+        |fun bar(): Pair<Int, Int> =Pair<Int, Int>(1, 2)
+      """.stripMargin)
 
+  Try
 }
 

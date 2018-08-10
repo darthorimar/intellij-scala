@@ -1,14 +1,18 @@
 package org.jetbrains.plugins.kotlinConverter
 
+import org.jetbrains.plugins.kotlinConverter.Converter.ConvertResult
 import org.jetbrains.plugins.scala.base.ScalaLightPlatformCodeInsightTestCaseAdapter
 import org.jetbrains.plugins.scala.lang.psi.api.ScalaFile
-import org.junit.Assert.assertEquals
+import org.junit.Assert._
 
 abstract class ConverterTestBase extends ScalaLightPlatformCodeInsightTestCaseAdapter {
-  def doTest(scala: String, kotlin: String, doPrint: Boolean = false): Unit = {
+  def doTest(scala: String,
+             kotlin: String,
+             doPrint: Boolean = false): Unit = {
     configureFromFileTextAdapter("dummy.scala", scala)
     val psiFile = getFileAdapter
-    val res = Converter.convert(psiFile.asInstanceOf[ScalaFile], doPrint)
+    val ConvertResult(files, definitions) = Converter.convert(Seq(psiFile.asInstanceOf[ScalaFile]), doPrint)
+    val res = files.head._1
     if (doPrint) {
       println(res)
     }
@@ -19,7 +23,10 @@ abstract class ConverterTestBase extends ScalaLightPlatformCodeInsightTestCaseAd
     }
   }
 
-  def doExprTest(scala: String, kotlin: String, doPrint: Boolean = false): Unit =
+
+  def doExprTest(scala: String,
+                 kotlin: String,
+                 doPrint: Boolean = false): Unit =
     doTest(s"def a = {$scala \n 42}", s"fun a(): Int {$kotlin \n return 42}", doPrint)
 
   private def unformat(text: String) =

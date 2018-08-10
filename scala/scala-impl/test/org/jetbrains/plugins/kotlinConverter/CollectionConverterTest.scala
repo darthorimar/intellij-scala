@@ -99,6 +99,16 @@ class CollectionConverterTest extends ConverterTestBase {
         | fun bar(a: Tuple3<Int, String, Char>): Tuple3<Int, String, Char> =a
       """.stripMargin)
 
+  def testTryApply(): Unit =
+    doTest(
+      """ import scala.util.Try
+        |val a: Try[Int] = Try(1)
+      """.stripMargin,
+      """  val a: Try<Int> = runTry { 1 }
+      """.stripMargin)
+
+
+
 
 
 }
