@@ -100,7 +100,8 @@ class ConvertTest extends ConverterTestBase {
         |}""".stripMargin)
   }
 
-  def testUnapplyInMatch(): Unit =
+
+  def testOuterUnapplyInMatch(): Unit =
     doTest(
       """trait I
         |  case class A(i: I) extends I
@@ -134,6 +135,61 @@ class ConvertTest extends ConverterTestBase {
         |      x
         |    }
         |    else -> throw Exception("Match exception")
+        |  }
+        |}
+        |interface I
+        |data class A( val i: I) : I {
+        |  companion object  {
+        |    fun apply(i: I): A =A(i)
+        |    fun unapply(x: A): A? =x
+        |  }
+        |}
+        |data class B( val x: Int) : I {
+        |  companion object  {
+        |    fun apply(x: Int): B =B(x)
+        |    fun unapply(x: B): B? =x
+        |  }
+        |}
+        |object O {
+        |  fun unapply(arg: Int): A? =A.apply(B.apply(1))
+        |}""".stripMargin)
+
+  def testInnerUnapplyInMatch(): Unit =
+    doTest(
+      """trait I
+        |  case class A(i: I) extends I
+        |  case class B(x: Int) extends I
+        |  object O {
+        |    def unapply(arg: Int): Option[A] = Some(A(B(1)))
+        |  }
+        |  val q = Right(1) match {
+        |    case Right(O(A(B(x)))) => x
+        |  }""".stripMargin,
+      """ val q: Int = run {
+        |   val match = Right.apply(1)
+        |  data class `Right(O(A(B(x))))_data`(public val x: Int)
+        |  val `Right(O(A(B(x))))` by lazy {
+        |    if (match is Right) {
+        |       val (l) = match
+        |      run {
+        |         val (l1) = O.unapply(l) ?: return@lazy null
+        |        if (l1 is A) {
+        |           val (l2) = l1
+        |          if (l2 is B) {
+        |             val (x) = l2
+        |            if (x is Int) return@lazy `Right(O(A(B(x))))_data`(x)
+        |          }
+        |        }
+        |      }
+        |    }
+        |    return@lazy null
+        |  }
+        |  when {
+        |    `Right(O(A(B(x))))` != null -> {
+        |       val (x) = `Right(O(A(B(x))))`
+        |      x
+        |    }
+        |    else -> throw MatchError(match)
         |  }
         |}
         |interface I
