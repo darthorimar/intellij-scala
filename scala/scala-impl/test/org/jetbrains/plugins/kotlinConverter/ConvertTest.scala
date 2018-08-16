@@ -279,7 +279,7 @@ class ConvertTest extends ConverterTestBase {
       """ implicit def toStr(a: Int) = a.toString
         |  def q(s: String) = s
         |  println(q(1))""".stripMargin,
-      """fun toStr(a: Int): String =a.toString
+      """fun toStr(a: Int): String =a.toString()
         |  fun q(s: String): String =s
         |  println(q(toStr(1)))""".stripMargin)
 
