@@ -1,6 +1,8 @@
 package org.jetbrains.plugins.kotlinConverter
 
 class DefinitionConverterTest extends ConverterTestBase {
+  
+  /// TODO: add case class tests 
   def testTraitDef(): Unit =
     doTest(
       """
